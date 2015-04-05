@@ -17,4 +17,8 @@ public class Individual {
 	public void setRating(int rating) {
 		this.rating = rating;
 	}
+	
+	public void create(){
+		//TODO: take vertex, edges and create random path that starts and ends at the same vertex (avoiding visited vertexes)
+	}
 }
