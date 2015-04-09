@@ -1,6 +1,17 @@
 package pl.agh.edu.bo.projekt;
 
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Paint;
 import java.util.Random;
+
+import javax.swing.JFrame;
+
+import org.apache.commons.collections15.Transformer;
+
+import edu.uci.ics.jung.algorithms.layout.KKLayout;
+import edu.uci.ics.jung.algorithms.layout.Layout;
+import edu.uci.ics.jung.visualization.BasicVisualizationServer;
 
 /**
  * Hello world!
@@ -24,10 +35,9 @@ public class App
     	//Initialization
     	int initPaths = random.nextInt(5)+2;
     	
-    	Population population = new Population(initPaths, graph);
     	
-		
-		
+    	
+    	Population population = new Population(initPaths, graph);
     	
     	
     	

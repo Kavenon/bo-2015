@@ -1,6 +1,6 @@
 package pl.agh.edu.bo.projekt;
 
-import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Random;
 
 import edu.uci.ics.jung.graph.Graph;
@@ -36,21 +36,52 @@ public class Individual {
 	public void create(OurGraph ourGraph) {
 		Random random = new Random();
 
-		while (true) {
-			Graph<Vertex, String> graph = ourGraph.getGraph();
+		//while (true) {
+			Graph<Integer, String> graph = ourGraph.getGraph();
 
 			int vertexCount = graph.getVertexCount();
-			int possibleToSearch = random.nextInt(Integer.MAX_VALUE)
+			int firstVertexId = random.nextInt(Integer.MAX_VALUE)
 					% vertexCount;
+			
+			Vertex firstVertex = graph.(firstVertexId);
+			
+			while(firstVertex == n)
+			Collection<Vertex> neighborsList = graph.getNeighbors(firstVertex);
+			int neighborCount = graph.getNeighborCount(firstVertex);
+			
+			if(neighborCount > 0){
+				Vertex neighbor;
+				for(Vertex v : neighborsList){
+					if(Math.random() < 0.1){
+						neighbor = v;
+						break;
+					}
+				}	
+				if(neighbor == null){
+					neighbor = neighborsList.iterator().next();
+				}				
+			}
+			
+			
+			
+			
+		
+			 ourGraph.getVertexById(randomNeighorId);
 
-			ArrayList<Vertex> possibleToVisit = new ArrayList<Vertex>();
+			
+			
+			// losowa lista wierzcholkow dla ktorych sprawdzimy trase
+			/*ArrayList<Vertex> possibleToVisit = new ArrayList<Vertex>();
 
 			for (int i = 0; i <= possibleToSearch; i++) {
 				Vertex v = ourGraph.getVertexById(random.nextInt(vertexCount));
 				if (!possibleToVisit.contains(v))
 					possibleToVisit.add(v);
 			}
-		}
+			
+			graph.*/
+			
+	//	}
 
 		// Vertex firstVertex = ourGraph.getVertexById(firstVertexId);
 		// Vertex currentVertex = firstVertex;
