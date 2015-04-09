@@ -1,6 +1,6 @@
 package pl.agh.edu.bo.projekt;
 
-import java.util.Collection;
+import java.util.ArrayList;
 import java.util.Random;
 
 import edu.uci.ics.jung.graph.Graph;
@@ -35,60 +35,28 @@ public class Individual {
 
 	public void create(OurGraph ourGraph) {
 		Random random = new Random();
-
-		//while (true) {
-			Graph<Integer, String> graph = ourGraph.getGraph();
-
-			int vertexCount = graph.getVertexCount();
-			int firstVertexId = random.nextInt(Integer.MAX_VALUE)
-					% vertexCount;
-			
-			Vertex firstVertex = graph.(firstVertexId);
-			
-			while(firstVertex == n)
-			Collection<Vertex> neighborsList = graph.getNeighbors(firstVertex);
-			int neighborCount = graph.getNeighborCount(firstVertex);
-			
-			if(neighborCount > 0){
-				Vertex neighbor;
-				for(Vertex v : neighborsList){
-					if(Math.random() < 0.1){
-						neighbor = v;
-						break;
-					}
-				}	
-				if(neighbor == null){
-					neighbor = neighborsList.iterator().next();
-				}				
-			}
-			
-			
-			
-			
+		Graph<Integer, String> graph = ourGraph.getGraph();
+		ArrayList<Integer> chromosome = new ArrayList<Integer>();
 		
-			 ourGraph.getVertexById(randomNeighorId);
+		ArrayList<Integer> lst = new ArrayList<Integer>();
+		
 
-			
-			
-			// losowa lista wierzcholkow dla ktorych sprawdzimy trase
-			/*ArrayList<Vertex> possibleToVisit = new ArrayList<Vertex>();
-
-			for (int i = 0; i <= possibleToSearch; i++) {
-				Vertex v = ourGraph.getVertexById(random.nextInt(vertexCount));
-				if (!possibleToVisit.contains(v))
-					possibleToVisit.add(v);
-			}
-			
-			graph.*/
-			
-	//	}
-
-		// Vertex firstVertex = ourGraph.getVertexById(firstVertexId);
-		// Vertex currentVertex = firstVertex;
-
-		// losuj wierzcholek poczatkowy
-		// losuj ile wierzcholkow odwiedzic
-
+		for(int i = 0; i < graph.getVertexCount(); i++){
+			lst.add(i);	
+		}
+		
+		for(int i = 0; i < graph.getVertexCount(); i++){
+			int index = random.nextInt(lst.size());			
+            int item = lst.get(index);            
+            chromosome.add(item);
+            lst.remove(index);	
+            
+            System.out.print(item+ " ");
+		}
+		System.out.println();
 	}
 
+	public void evaluate(){
+		
+	}
 }

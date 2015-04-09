@@ -49,13 +49,13 @@ public class OurGraph {
 			dg.addVertex(i);
 		}	
 
-		for (int i = 0; i < n; i++) {
+		/*for (int i = 0; i < n; i++) {
 			for (int j = i + 1; j < n; j++) {
 				if (Math.random() < p) {
 					dg.addEdge(i + "-to-" + j, i, j);
 				}
 			}
-		}
+		}*/
 		return dg;
 	}
 

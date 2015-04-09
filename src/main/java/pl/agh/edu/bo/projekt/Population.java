@@ -12,6 +12,7 @@ public class Population {
 		for(int i = 0; i < populationSize; i++){
 			Individual newIndyvidual = new Individual();
 			newIndyvidual.create(graph);
+			newIndyvidual.evaluate();
 			individuals.add(newIndyvidual);
 		}
 	}
