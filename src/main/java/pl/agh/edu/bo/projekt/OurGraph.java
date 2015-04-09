@@ -7,11 +7,13 @@ import java.util.Collection;
 
 import javax.swing.JFrame;
 
+import org.apache.commons.collections15.Transformer;
+
 import edu.uci.ics.jung.algorithms.layout.KKLayout;
-import edu.uci.ics.jung.algorithms.*;
+import edu.uci.ics.jung.algorithms.layout.Layout;
 import edu.uci.ics.jung.graph.Graph;
-import edu.uci.ics.jung.graph.*;
-import edu.uci.ics.jung.visualization.*;
+import edu.uci.ics.jung.graph.UndirectedSparseGraph;
+import edu.uci.ics.jung.visualization.BasicVisualizationServer;
 
 
 public class OurGraph {
@@ -73,9 +75,9 @@ public class OurGraph {
 		BasicVisualizationServer<Vertex, String> vv = new BasicVisualizationServer<Vertex, String>(
 				layout);
 		
-	   Transformer<Integer,Paint> vertexColor = new Transformer<Integer,Paint>() {
-            public Paint transform(Integer i) {
-                if(i == 1) return Color.GREEN;
+	   Transformer<Vertex,Paint> vertexColor = new Transformer<Vertex,Paint>() {
+            public Paint transform(Vertex v) {
+                if(v.getId() == 1) return Color.GREEN;
                 return Color.RED;
             }
         };
