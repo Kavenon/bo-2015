@@ -6,11 +6,12 @@ public class Population {
 
 	ArrayList<Individual> individuals;
 	
-	Population(int populationSize){
+	Population(int populationSize, OurGraph graph){
 		individuals = new ArrayList<Individual>();
-		
+
 		for(int i = 0; i < populationSize; i++){
 			Individual newIndyvidual = new Individual();
+			newIndyvidual.create(graph);
 			individuals.add(newIndyvidual);
 		}
 	}
