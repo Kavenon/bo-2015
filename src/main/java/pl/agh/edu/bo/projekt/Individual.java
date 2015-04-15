@@ -13,8 +13,8 @@ public class Individual {
 	double length;
 
 	ArrayList<Vertex> path;
-	
-	public Individual(){
+
+	public Individual() {
 		path = new ArrayList<Vertex>();
 	}
 
@@ -63,18 +63,26 @@ public class Individual {
 		Individual newIndividual = new Individual();
 		ArrayList<Vertex> lst1 = new ArrayList<Vertex>(indiv1.path);
 		ArrayList<Vertex> lst2 = new ArrayList<Vertex>(indiv2.path);
+		
+		for(Vertex v : lst1){
+			newIndividual.path.add(v);
+		}
+		for(Vertex v : lst2){
+			newIndividual.path.add(v);
+		}
 		// Loop through genes
-		for (int i = 0; i < indiv1.path.size() + indiv2.path.size(); i++) {
+		/*for (int i = 0; i < indiv1.path.size() + indiv2.path.size(); i++) {
 			// Crossover
-			if ((lst2.size() > 0 && Math.random() <= Constants.CROSSOVER_RATE) || lst2.size() == 0) {
+			if ((lst2.size() > 0 && Math.random() <= Constants.CROSSOVER_RATE)
+					|| lst2.size() == 0) {
 				Vertex firstFromIndiv1 = lst1.get(0);
 				if (!newIndividual.path.contains(firstFromIndiv1)) {
-					newIndividual.path.add(firstFromIndiv1);			
+					newIndividual.path.add(firstFromIndiv1);
 				}
-				
+
 			} else {
-				Vertex firstFromList = lst2.get(0);			
-				if (!newIndividual.path.contains(firstFromList)) {					
+				Vertex firstFromList = lst2.get(0);
+				if (!newIndividual.path.contains(firstFromList)) {
 					newIndividual.path.add(firstFromList);
 					lst2.remove(firstFromList);
 				}
@@ -88,8 +96,32 @@ public class Individual {
 				newIndividual.path.add(newIndividual.path.get(0));
 			}
 		}
-		 System.out.println("asfadfadfadfd");
+		System.out.println("asfadfadfadfd");*/
 		return newIndividual;
+	}
+
+	public void mutate(OurGraph ourGraph) {
+		
+		
+		
+		int randomId = (int) (Math.random() * (path.size() - 1));
+		if(randomId ==0) randomId++;
+		Vertex randomFromPath = path.get(randomId);
+		
+		ArrayList<Vertex> lst = new ArrayList<Vertex>(ourGraph.getGraph().getVertices());
+		
+		while (lst.size()>0) {
+			Vertex randomFromGraph = lst.get((int)Math.random() * lst.size());
+			if(!path.contains(randomFromGraph) && randomFromGraph.getId() != randomFromPath.getId()){
+				path.set(randomId, randomFromGraph);
+				break;
+			}else {
+				lst.remove(randomFromGraph);
+			}
+		}
+		// 
+	
+
 	}
 
 	public String toString() {
@@ -100,7 +132,7 @@ public class Individual {
 		}
 
 		sb.append("length:" + this.length);
-
+		sb.append(" hash:" + this.hashCode());
 		return sb.toString();
 	}
 

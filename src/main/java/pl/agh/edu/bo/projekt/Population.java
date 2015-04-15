@@ -12,7 +12,7 @@ public class Population {
 		for(int i = 0; i < populationSize; i++){
 			Individual newIndyvidual = new Individual();
 			newIndyvidual.create(graph);
-			newIndyvidual.evaluate();
+			//newIndyvidual.evaluate();
 			newIndyvidual.debug();
 			
 			individuals.add(newIndyvidual);
@@ -47,7 +47,9 @@ public class Population {
      
         for (int i = 0; i < Constants.TOURNAMENT_POPULATION_SIZE; i++) {
             int randomId = (int) (Math.random() * individuals.size());
-            tournament.individuals.add(i, individuals.get(randomId));
+            
+            if(!tournament.individuals.contains(individuals.get(randomId)))
+            	tournament.individuals.add(individuals.get(randomId));
         }
         
         //System.out.println("=== TOURNAMENT POPULATION ==");

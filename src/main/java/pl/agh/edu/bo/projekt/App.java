@@ -22,42 +22,53 @@ public class App {
 
 		Population population = new Population(randomInitPathNumber, graph);		
 		
-		/*try {
-			Individual indiv1 = population.tournamentSelection();
-			Individual indiv2 = population.tournamentSelection();
-			System.out.println("\n best" + indiv1);
-			System.out.println("\n best" + indiv2);
-			
-			System.out.println("\n cross: " + Individual.crossover(indiv1, indiv2));
-			
-		}
-		catch(Exception e){
-			e.printStackTrace();
-		}*/
-		
 		// Stop condition, maximum number of iterations
 		int iterations = 0;
 		while(iterations < Constants.MAX_ITERATIONS){
 			
+			
+			for (Individual indiv : population.individuals) {
+				indiv.evaluate();			  
+			}
+			
+
+			System.out.println("====== START ======");
+			System.out.println(population);
+			
 			Population newPopulation = new Population();		
 			
+			// for tests
+			newPopulation = population;
 			// crossover
-	        for (int i = 0; i < population.individuals.size(); i++) {
+	        /*for (int i = 0; i < population.individuals.size(); i++) {
 	        	Individual indiv1 = population.tournamentSelection();
 				Individual indiv2 = population.tournamentSelection();
 	            //Individual newIndiv = Individual.crossover(indiv1, indiv2);
 	            newPopulation.individuals.add(indiv1);
-	        }
+	        }*/
 			
-	        System.out.println("iteration:" + iterations + "\n" + newPopulation);
+
+			System.out.println("====== AFTER CROSS BEFORE MUTATION======");
+			System.out.println(newPopulation);
+	    
 	        
 	        // mutate 
-	        /*for (int i = elitismOffset; i < newPopulation.size(); i++) {
-	            mutate(newPopulation.getIndividual(i));
-	        }*/
+	        for (int i = 0; i < newPopulation.individuals.size(); i++) {
+	        	 if (Math.random() <= Constants.MUTATION_RATE) {
+	        		 	System.err.println("before: (" +graph.getGraph().getVertexCount() +") " + newPopulation.individuals.get(i));
+	        		 	newPopulation.individuals.get(i).mutate(graph);
+	        		 	newPopulation.individuals.get(i).evaluate();
+	        			System.err.println("after :" + Integer.toHexString(newPopulation.individuals.get(i).hashCode()) + " "+ newPopulation.individuals.get(i));
+	        	 }
+	        }
 	        
-	        population = newPopulation;
+
+			System.out.println("====== AFTER MUTATION ======");
+			System.out.println(newPopulation);
 			
+	        population = newPopulation;
+	        //System.out.println("iteration:" + iterations + "\n" + newPopulation);
+	        
 			iterations++;
 		}
 		

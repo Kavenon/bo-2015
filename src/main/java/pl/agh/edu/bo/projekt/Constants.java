@@ -22,5 +22,7 @@ public class Constants {
 	
 	public static double CROSSOVER_RATE = 0.5;
 	
+	public static double MUTATION_RATE = 1;
+	
 	
 }
