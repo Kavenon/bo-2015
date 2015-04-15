@@ -1,6 +1,7 @@
 package pl.agh.edu.bo.projekt;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Random;
 
 import edu.uci.ics.jung.graph.Graph;
@@ -61,66 +62,83 @@ public class Individual {
 	public static Individual crossover(Individual indiv1, Individual indiv2) {
 
 		Individual newIndividual = new Individual();
+
 		ArrayList<Vertex> lst1 = new ArrayList<Vertex>(indiv1.path);
 		ArrayList<Vertex> lst2 = new ArrayList<Vertex>(indiv2.path);
-		
-		for(Vertex v : lst1){
-			newIndividual.path.add(v);
-		}
-		for(Vertex v : lst2){
-			newIndividual.path.add(v);
-		}
-		// Loop through genes
-		/*for (int i = 0; i < indiv1.path.size() + indiv2.path.size(); i++) {
-			// Crossover
-			if ((lst2.size() > 0 && Math.random() <= Constants.CROSSOVER_RATE)
-					|| lst2.size() == 0) {
-				Vertex firstFromIndiv1 = lst1.get(0);
-				if (!newIndividual.path.contains(firstFromIndiv1)) {
-					newIndividual.path.add(firstFromIndiv1);
-				}
 
-			} else {
-				Vertex firstFromList = lst2.get(0);
-				if (!newIndividual.path.contains(firstFromList)) {
-					newIndividual.path.add(firstFromList);
-					lst2.remove(firstFromList);
-				}
+		boolean firstDepleted = false;
+		boolean secondDepleted = false;
 
+		Random rnd = new Random();
+
+		int i = 0;
+		int j = 0;
+
+		for (Vertex v : lst1) {
+			lst2.removeAll(Collections.singleton(v));
+		}
+		lst1.remove(lst1.size() - 1);
+		// when indiv1 is same as indiv2
+		if (lst2.size() > 0)
+			lst2.remove(lst2.size() - 1);
+
+		while (true) {
+
+			try {
+				while (i < rnd.nextInt(lst1.size() + i)) {
+					newIndividual.path.add(lst1.get(i));
+					i++;
+				}
+			} catch (IndexOutOfBoundsException e) {
+				firstDepleted = true;
 			}
-		}
 
+			try {
+				while (j < rnd.nextInt(lst2.size() + j)) {
+					newIndividual.path.add(lst2.get(j));
+					j++;
+				}
+			} catch (IndexOutOfBoundsException e) {
+				secondDepleted = true;
+			} catch (IllegalArgumentException e) {
+				return indiv1;
+			} // when indiv1 is same as indiv2
+
+			if (firstDepleted && secondDepleted) {
+				break;
+			}
+
+		}
 		if (newIndividual.path.size() >= 2) {
 			if (!newIndividual.path.get(newIndividual.path.size() - 1).equals(
 					newIndividual.path.get(0))) {
 				newIndividual.path.add(newIndividual.path.get(0));
 			}
 		}
-		System.out.println("asfadfadfadfd");*/
 		return newIndividual;
 	}
 
 	public void mutate(OurGraph ourGraph) {
-		
-		
-		
+
 		int randomId = (int) (Math.random() * (path.size() - 1));
-		if(randomId ==0) randomId++;
+		if (randomId == 0)
+			randomId++;
 		Vertex randomFromPath = path.get(randomId);
-		
-		ArrayList<Vertex> lst = new ArrayList<Vertex>(ourGraph.getGraph().getVertices());
-		
-		while (lst.size()>0) {
-			Vertex randomFromGraph = lst.get((int)Math.random() * lst.size());
-			if(!path.contains(randomFromGraph) && randomFromGraph.getId() != randomFromPath.getId()){
+
+		ArrayList<Vertex> lst = new ArrayList<Vertex>(ourGraph.getGraph()
+				.getVertices());
+
+		while (lst.size() > 0) {
+			Vertex randomFromGraph = lst.get((int) Math.random() * lst.size());
+			if (!path.contains(randomFromGraph)
+					&& randomFromGraph.getId() != randomFromPath.getId()) {
 				path.set(randomId, randomFromGraph);
 				break;
-			}else {
+			} else {
 				lst.remove(randomFromGraph);
 			}
 		}
-		// 
-	
+		//
 
 	}
 
