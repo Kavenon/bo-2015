@@ -10,53 +10,62 @@ import edu.uci.ics.jung.graph.Graph;
  */
 public class Individual {
 
-	/**
-	 * path length
-	 */
-	int rating;
+	double length;
 
-	Vertex[] path;
-
-	public Vertex[] getPath() {
-		return path;
-	}
-
-	public void setPath(Vertex[] path) {
-		this.path = path;
-	}
-
-	public int getRating() {
-		return rating;
-	}
-
-	public void setRating(int rating) {
-		this.rating = rating;
-	}
+	ArrayList<Vertex> path;
 
 	public void create(OurGraph ourGraph) {
 		Random random = new Random();
-		Graph<Integer, String> graph = ourGraph.getGraph();
-		ArrayList<Integer> chromosome = new ArrayList<Integer>();
-		
-		ArrayList<Integer> lst = new ArrayList<Integer>();
-		
 
-		for(int i = 0; i < graph.getVertexCount(); i++){
-			lst.add(i);	
+		Graph<Vertex, String> graph = ourGraph.getGraph();
+		path = new ArrayList<Vertex>();
+
+		ArrayList<Vertex> lst = new ArrayList<Vertex>(graph.getVertices());
+
+		int maxPathLength = (Constants.MAX_PATH_LENGTH==0) ? graph.getVertexCount() : Constants.MAX_PATH_LENGTH;
+		int minPathLength = Constants.MIN_PATH_LENGTH; 
+
+		int randomPathLength = random
+				.nextInt((maxPathLength - minPathLength) + 1) + minPathLength;
+		if (randomPathLength > 0) {
+			for (int i = 0; i < randomPathLength; i++) {
+				int index = random.nextInt(lst.size());
+				Vertex item = lst.get(index);
+				path.add(item);
+				lst.remove(index);
+			}
+
+			if (path.size() >= 2) {
+				if (!path.get(path.size() - 1).equals(path.get(0))) {
+					path.add(path.get(0));
+				}
+			}
+
 		}
-		
-		for(int i = 0; i < graph.getVertexCount(); i++){
-			int index = random.nextInt(lst.size());			
-            int item = lst.get(index);            
-            chromosome.add(item);
-            lst.remove(index);	
-            
-            System.out.print(item+ " ");
-		}
-		System.out.println();
+
 	}
 
-	public void evaluate(){
-		
+	// count path length
+	public void evaluate() {
+		length = 0;
+		for (int i = 0; i < path.size() - 1; i++) {
+			length += Vertex.distance(path.get(i), path.get(i + 1));
+		}
+	}
+	
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+
+		for (Vertex i : path) {
+			sb.append(i.getId() + " ");
+		}
+
+		sb.append("length:" + this.length);
+
+		return sb.toString();
+	}
+
+	public void debug() {
+		if(Constants.ENV == 0) System.out.println(this);
 	}
 }
