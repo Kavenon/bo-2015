@@ -38,7 +38,7 @@ public class Population {
 		return result;
 	}
 	
-	Individual tournamentSelection() throws Exception{
+	Individual tournamentSelection(){
 		
 		//if(Constants.TOURNAMENT_POPULATION_SIZE > Constants.MIN_INIT_PATH) 
 		//	throw new Exception();
