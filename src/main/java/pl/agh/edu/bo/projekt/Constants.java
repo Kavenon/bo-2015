@@ -20,5 +20,7 @@ public class Constants {
 	
 	public static int TOURNAMENT_POPULATION_SIZE = 2; // have to be > MIN_INIT_PATH
 	
+	public static double CROSSOVER_RATE = 0.5;
+	
 	
 }

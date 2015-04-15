@@ -40,8 +40,8 @@ public class Population {
 	
 	Individual tournamentSelection() throws Exception{
 		
-		if(Constants.TOURNAMENT_POPULATION_SIZE > Constants.MIN_INIT_PATH) 
-			throw new Exception();
+		//if(Constants.TOURNAMENT_POPULATION_SIZE > Constants.MIN_INIT_PATH) 
+		//	throw new Exception();
 		
 	    Population tournament = new Population(); 
      
@@ -50,8 +50,8 @@ public class Population {
             tournament.individuals.add(i, individuals.get(randomId));
         }
         
-        System.out.println("=== TOURNAMENT POPULATION ==");
-        System.out.println(tournament);
+        //System.out.println("=== TOURNAMENT POPULATION ==");
+        //System.out.println(tournament);
         // Get the fittest
         Individual fittest = tournament.getBestIndividual();
         return fittest;
@@ -65,6 +65,7 @@ public class Population {
 			sb.append("\n");
 		}
 		return sb.toString();
+		
 	}
 	
 }

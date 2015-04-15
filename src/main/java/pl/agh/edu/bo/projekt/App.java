@@ -23,10 +23,16 @@ public class App {
 		Population population = new Population(randomInitPathNumber, graph);		
 		
 		try {
-			System.out.println("\n best" + population.tournamentSelection());
+			Individual indiv1 = population.tournamentSelection();
+			Individual indiv2 = population.tournamentSelection();
+			System.out.println("\n best" + indiv1);
+			System.out.println("\n best" + indiv2);
+			
+			System.out.println("\n cross: " + Individual.crossover(indiv1, indiv2));
+			
 		}
 		catch(Exception e){
-			
+			e.printStackTrace();
 		}
 		// Stop condition, maximum number of iterations
 		int iterations = 0;
