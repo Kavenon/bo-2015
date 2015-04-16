@@ -25,7 +25,7 @@ public class Individual {
 	public void create(OurGraph ourGraph) {
 		Random random = new Random();
 		Graph<Vertex, String> graph = ourGraph.getGraph();
-		
+
 		path = new ArrayList<Vertex>();
 
 		// lista wierzcholkow w grafie
@@ -38,7 +38,7 @@ public class Individual {
 		// sciezka moze byc loswej dlugosci (min,max)
 		int randomPathLength = random
 				.nextInt((maxPathLength - minPathLength) + 1) + minPathLength;
-		
+
 		if (randomPathLength > 0) {
 			// dodajemy losowe wierzcholki
 			for (int i = 0; i < randomPathLength; i++) {
@@ -48,7 +48,8 @@ public class Individual {
 				lst.remove(index);
 			}
 
-			// upewniamy sie ze sciezka wraca do tego samego wierzcholka z ktorego wyszla
+			// upewniamy sie ze sciezka wraca do tego samego wierzcholka z
+			// ktorego wyszla
 			if (path.size() >= 2) {
 				if (!path.get(path.size() - 1).equals(path.get(0))) {
 					path.add(path.get(0));
@@ -68,6 +69,10 @@ public class Individual {
 	}
 
 	// krzyzowanie
+	/**
+	 * todo: nie wiem czy sciezki nie powinny byc krotsze na wyjsciu, zbyt
+	 * szybko osiagamy sciezke przez wszystkie wierzcholki
+	 */
 	public static Individual crossover(ArrayList<Vertex> lst1,
 			ArrayList<Vertex> lst2) {
 
@@ -88,7 +93,7 @@ public class Individual {
 			lst2.removeAll(Collections.singleton(v));
 		}
 		lst1.remove(lst1.size() - 1);
-		
+
 		// when indiv1 is same as indiv2
 		if (lst2.size() > 0)
 			lst2.remove(lst2.size() - 1);
@@ -127,8 +132,9 @@ public class Individual {
 			}
 
 		}
-		
-		// upewniamy sie ze sciezka wraca do tego samego wierzcholka z ktorego wyszla
+
+		// upewniamy sie ze sciezka wraca do tego samego wierzcholka z ktorego
+		// wyszla
 		if (newIndividual.path.size() >= 2) {
 			if (!newIndividual.path.get(newIndividual.path.size() - 1).equals(
 					newIndividual.path.get(0))) {
@@ -139,20 +145,26 @@ public class Individual {
 	}
 
 	// mutacja
+	/**
+	 * todo: podmieniac wiecej niz jeden wierzcholek w sytuacji gdy sciezka
+	 * przechodzi przez wszystkie wierzcholki zamiast podmieniac mozna je
+	 * permutowac
+	 */
 	public void mutate(OurGraph ourGraph) {
 
 		// zmieniamy losowy wierzcholek na inny
-		int randomId = (int) (Math.random() * path.size());		
+		int randomId = (int) (Math.random() * path.size());
 		Vertex randomFromPath = path.get(randomId);
 
 		ArrayList<Vertex> lst = new ArrayList<Vertex>(ourGraph.getGraph()
 				.getVertices());
 
 		while (lst.size() > 0) {
-			// losowy wierzcholek z grafu na ktory probujemy zmienic 
+			// losowy wierzcholek z grafu na ktory probujemy zmienic
 			Vertex randomFromGraph = lst.get((int) Math.random() * lst.size());
-			
-			// sprawdzamy, czy taki wierzcholek juz istnieje w sciezce i czy nie jest tym podmienianym
+
+			// sprawdzamy, czy taki wierzcholek juz istnieje w sciezce i czy nie
+			// jest tym podmienianym
 			if (!path.contains(randomFromGraph)
 					&& randomFromGraph.getId() != randomFromPath.getId()) {
 				path.set(randomId, randomFromGraph);
@@ -161,11 +173,11 @@ public class Individual {
 				lst.remove(randomFromGraph);
 			}
 		}
-				
-		// upewniamy sie ze sciezka wraca do tego samego wierzcholka z ktorego wyszla
+
+		// upewniamy sie ze sciezka wraca do tego samego wierzcholka z ktorego
+		// wyszla
 		if (path.size() >= 2) {
-			if (!path.get(path.size() - 1).equals(
-					path.get(0))) {
+			if (!path.get(path.size() - 1).equals(path.get(0))) {
 				path.add(path.get(0));
 			}
 		}
@@ -179,8 +191,9 @@ public class Individual {
 			sb.append(i.getId() + " ");
 		}
 
-		if(this.length > 0) sb.append("length:" + this.length);
-	
+		if (this.length > 0)
+			sb.append("length:" + this.length);
+
 		return sb.toString();
 	}
 
