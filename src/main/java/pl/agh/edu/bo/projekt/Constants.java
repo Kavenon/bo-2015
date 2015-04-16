@@ -3,7 +3,7 @@ package pl.agh.edu.bo.projekt;
 public class Constants {
 	public static int ENV = 0; // 0 - debug, 1 - production
 
-	public static int MAX_PATH_LENGTH = 0; // 0 - for verticles count
+	public static int MAX_PATH_LENGTH = 20; // 0 - for verticles count
 	public static int MIN_PATH_LENGTH = 8;
 
 	public static int MAX_GRAPH_VERTICLES = 50;
