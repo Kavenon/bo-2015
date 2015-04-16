@@ -3,14 +3,14 @@ package pl.agh.edu.bo.projekt;
 import java.util.Random;
 
 public class Vertex {
-	
-	private int id;	
+
+	private int id;
 
 	private int x;
 	private int y;
-	private boolean visited;	
-	
-	public Vertex(int id){
+	private boolean visited;
+
+	public Vertex(int id) {
 		Random random = new Random();
 		this.id = id;
 		this.x = random.nextInt(Constants.CANVAS_WIDTH);
@@ -49,9 +49,9 @@ public class Vertex {
 		this.y = y;
 	}
 
-	public static double distance(Vertex v1, Vertex v2){
-		return Math.sqrt(Math.pow((v2.getX() - v1.getX()), 2) + Math.pow((v2.getY() - v1.getY()), 2));
+	public static double distance(Vertex v1, Vertex v2) {
+		return Math.sqrt(Math.pow((v2.getX() - v1.getX()), 2)
+				+ Math.pow((v2.getY() - v1.getY()), 2));
 	}
-	
-	
+
 }
