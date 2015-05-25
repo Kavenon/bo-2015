@@ -54,4 +54,25 @@ public class Vertex {
 				+ Math.pow((v2.getY() - v1.getY()), 2));
 	}
 
+    @Override
+    public String toString() {
+        return "" + id;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Vertex vertex = (Vertex) o;
+
+        if (id != vertex.id) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        return id;
+    }
 }

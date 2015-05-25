@@ -3,9 +3,8 @@
  */
 package pl.agh.edu.bo.projekt;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Random;
+import java.util.*;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import edu.uci.ics.jung.graph.Graph;
 
@@ -26,46 +25,84 @@ public class Individual {
 		Random random = new Random();
 		Graph<Vertex, String> graph = ourGraph.getGraph();
 
-		path = new ArrayList<Vertex>();
+        ArrayList<Vertex> verticlesFromGraph;
+        boolean foundPath = false;
 
-		// lista wierzcholkow w grafie
-		ArrayList<Vertex> lst = new ArrayList<Vertex>(graph.getVertices());
 
 		int maxPathLength = (Constants.MAX_PATH_LENGTH == 0) ? graph
 				.getVertexCount() : Constants.MAX_PATH_LENGTH;
 		int minPathLength = Constants.MIN_PATH_LENGTH;
 
-		// sciezka moze byc loswej dlugosci (min,max)
-		int randomPathLength = random
-				.nextInt((maxPathLength - minPathLength) + 1) + minPathLength;
+        int iterationsToFindOnePath = 0;
+        int randomPathLength;
 
-		if (randomPathLength > 0) {
-			// dodajemy losowe wierzcholki
-			for (int i = 0; i < randomPathLength; i++) {
-				int index = random.nextInt(lst.size());
-				Vertex item = lst.get(index);
-				path.add(item);
-				lst.remove(index);
-			}
+        while(!foundPath) {
+            verticlesFromGraph = new ArrayList<Vertex>(graph.getVertices());
+            path.clear();
 
-			// upewniamy sie ze sciezka wraca do tego samego wierzcholka z
-			// ktorego wyszla
-			if (path.size() >= 2) {
-				if (!path.get(path.size() - 1).equals(path.get(0))) {
-					path.add(path.get(0));
-				}
-			}
+            randomPathLength = random
+                    .nextInt((maxPathLength - minPathLength) + 1) + minPathLength;
 
-		}
+            if (randomPathLength > 1) {
+
+                addRandomVerticesToPath(verticlesFromGraph, randomPathLength);
+                addStartVertexToEnd();
+
+                if (validatePath(path, graph)) {
+                    foundPath = true;
+                }
+                iterationsToFindOnePath++;
+            }
+        }
+
+        System.out.println("Iterations to find one path: " + iterationsToFindOnePath);
 
 	}
 
-	// obliczanie dlugosci sciezki
+    private void addStartVertexToEnd() {
+        if (path.size() >= 2) {
+            if (!path.get(path.size() - 1).equals(path.get(0))) {
+                path.add(path.get(0));
+            }
+        }
+    }
+
+    private void addRandomVerticesToPath(ArrayList<Vertex> lst, int randomPathLength) {
+        Collections.shuffle(lst);
+        for (int j = 0; j < randomPathLength; j++) {
+            try {
+                path.add(lst.get(j));
+            }
+            catch(IndexOutOfBoundsException e) {
+                break;
+            }
+
+        }
+    }
+
+    public boolean validatePath(List<Vertex> path, Graph<Vertex, String> dg ) {
+        ArrayList<Vertex> visited = new ArrayList<Vertex>();
+
+        for (int i = 0; i < path.size()-1; i++){
+            if(visited.contains(path.get(i)))
+                return false;
+            visited.add(path.get(i));
+        }
+
+
+        for (int i = 0; i < path.size()-1; i++) {
+            if(!dg.isSuccessor(path.get(i), path.get(i+1)))
+                return false;
+        }
+        return true;
+    }
+
+    // obliczanie dlugosci sciezki
 	public void evaluate() {
-		length = 0;
-		for (int i = 0; i < path.size() - 1; i++) {
+		length = path.size();
+		/*for (int i = 0; i < path.size() - 1; i++) {
 			length += Vertex.distance(path.get(i), path.get(i + 1));
-		}
+		}*/
 	}
 
 	// krzyzowanie
@@ -152,35 +189,44 @@ public class Individual {
 	 */
 	public void mutate(OurGraph ourGraph) {
 
-		// zmieniamy losowy wierzcholek na inny
-		int randomId = (int) (Math.random() * path.size());
-		Vertex randomFromPath = path.get(randomId);
 
-		ArrayList<Vertex> lst = new ArrayList<Vertex>(ourGraph.getGraph()
-				.getVertices());
+        boolean inserted = false;
+        int iterations = 0;
 
-		while (lst.size() > 0) {
-			// losowy wierzcholek z grafu na ktory probujemy zmienic
-			Vertex randomFromGraph = lst.get((int) Math.random() * lst.size());
 
-			// sprawdzamy, czy taki wierzcholek juz istnieje w sciezce i czy nie
-			// jest tym podmienianym
-			if (!path.contains(randomFromGraph)
-					&& randomFromGraph.getId() != randomFromPath.getId()) {
-				path.set(randomId, randomFromGraph);
-				break;
-			} else {
-				lst.remove(randomFromGraph);
-			}
-		}
+        CopyOnWriteArrayList<Vertex> lstFromGraph = new CopyOnWriteArrayList<Vertex>(ourGraph.getGraph()
+                .getVertices());
 
-		// upewniamy sie ze sciezka wraca do tego samego wierzcholka z ktorego
-		// wyszla
-		if (path.size() >= 2) {
-			if (!path.get(path.size() - 1).equals(path.get(0))) {
-				path.add(path.get(0));
-			}
-		}
+        for (Vertex vertex : lstFromGraph) {
+            if (path.contains(vertex)) {
+                lstFromGraph.remove(vertex);
+            }
+        }
+
+        int maxPossibleIterations = lstFromGraph.size() ^ path.size();
+        Random random = new Random();
+        if(lstFromGraph.size() > 0) {
+            while (!inserted && iterations < maxPossibleIterations) {
+                int randomId2 = random
+                        .nextInt((path.size() - 1) + 1) + 1;
+                //int randomId2 = (int) (Math.random() * path.size());
+                Collections.shuffle(lstFromGraph);
+
+                path.add(randomId2, lstFromGraph.get(0));
+                //addStartVertexToEnd();
+
+                if (!validatePath(path, ourGraph.getGraph())) {
+                    path.remove(randomId2);
+                    iterations++;
+                } else {
+                    inserted = true;
+                }
+
+            }
+        }
+
+
+        System.out.println("Inserted: " + inserted + " iterations: " + iterations + " max possible" + maxPossibleIterations);
 
 	}
 
@@ -201,4 +247,35 @@ public class Individual {
 		if (Constants.ENV == 0)
 			System.out.println(this);
 	}
+
+
+    
+    public static List<Individual> crossoverNew(ArrayList<Vertex> l1, ArrayList<Vertex> l2) {
+        List<Vertex> l1FirstHalf = l1.subList(0, l1.size() / 2);
+        List<Vertex> l1SecondHalf = l1.subList(l1FirstHalf.size(), l1.size() );
+
+        List<Vertex> l2FirstHalf = l2.subList(0, l2.size()/2);
+        List<Vertex> l2SecondHalf = l2.subList(l2FirstHalf.size(), l2.size());
+
+        List<Individual> result = new ArrayList<Individual>();
+
+        Individual l1Cross = mergeResult(l1FirstHalf, l2FirstHalf);
+
+        l1Cross.addStartVertexToEnd();
+        result.add(l1Cross);
+
+        Individual l2Cross = mergeResult(l1SecondHalf, l2SecondHalf);
+        l2Cross.addStartVertexToEnd();
+        result.add(l2Cross);
+
+        return result;
+    }
+
+    private static Individual mergeResult(List<Vertex> l1FirstHalf, List<Vertex> l2FirstHalf) {
+        ArrayList<Vertex> l1CrossPath = new ArrayList<Vertex>(l1FirstHalf);
+        l1CrossPath.addAll(l2FirstHalf);
+        Individual l1Cross = new Individual();
+        l1Cross.path = l1CrossPath;
+        return l1Cross;
+    }
 }

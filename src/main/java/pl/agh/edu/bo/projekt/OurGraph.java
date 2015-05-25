@@ -4,9 +4,13 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Paint;
 import java.awt.geom.Point2D;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JFrame;
 
+import com.ctc.wstx.dtd.ContentSpec;
+import edu.uci.ics.jung.visualization.decorators.ToStringLabeller;
 import org.apache.commons.collections15.Transformer;
 
 import edu.uci.ics.jung.algorithms.layout.Layout;
@@ -35,6 +39,17 @@ public class OurGraph {
 		for (int i = 0; i < n; i++) {
 			dg.addVertex(new Vertex(i));
 		}
+
+        List<Vertex> verticles = new ArrayList(dg.getVertices());
+
+        for (int i = 0; i < dg.getVertexCount(); i++) {
+            for (int j = i + 1; j < dg.getVertexCount(); j++) {
+                if (Math.random() < Constants.EDGE_PROBABILITY) {
+                    if(i != j)
+                        dg.addEdge(i + "-to-" + j, verticles.get(i), verticles.get(j));
+                }
+            }
+        }
 
 		return dg;
 	}
@@ -69,7 +84,7 @@ public class OurGraph {
 				return Color.RED;
 			}
 		};
-
+        vv.getRenderContext().setVertexLabelTransformer(new ToStringLabeller());
 		vv.getRenderContext().setVertexFillPaintTransformer(vertexColor);
 		vv.setPreferredSize(new Dimension(Constants.CANVAS_WIDTH,
 				Constants.CANVAS_HEIGHT)); // Sets the viewing area

@@ -10,4 +10,6 @@ import org.junit.runners.Suite.SuiteClasses;
 		VertexDistanceTest.class })
 public class AllTests {
 
+
+
 }
