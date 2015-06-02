@@ -7,109 +7,109 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class App {
+public class App implements Runnable {
 
-	public static void main(String[] args) {
+    double crossoverProbability ;
+    double mutationProbability ;
+    int maxIterations ;
+    int initPathLength ;
+    int populationSize ;
+    OurGraph ourGraph;
+
+    private Population population;
+    Individual bestIndividual;
+
+    boolean running = false;
+
+    public App() {
+    }
+
+    @Override
+    public void run() {
+        main();
+    }
+
+	public void main() {
 
 		Random random = new Random();
+        int mutationCounter = 0;
+        int crossoverCounter = 0;
 
-        OurGraph graph = createRandomGraph(random);
 
-        Population population = createInitialPopulation(random, graph);
+        population = createInitialPopulation(random, ourGraph,populationSize,initPathLength);
 
 		// warunkiem końcowym jest ilość iteracji
 		int iterations = 0;
-		while (iterations < Constants.MAX_ITERATIONS) {
+        long start = System.currentTimeMillis();
+		while (running && iterations < maxIterations) {
 
 			// ocena osobnikow
             evaluatePopulation(population);
+            bestIndividual = population.getBestIndividual();
 
-            if (Constants.ENV == 0) {
-				System.out.println("====== START ======");
-				System.out.println(population);
-			}
+            if(population.getBestIndividual() != null && population.getBestIndividual().path.size() >= ourGraph.getGraph().getVertexCount()+1){
+                running = false;
+                break;
+            }
 
-			Population newPopulation = new Population();
+            Population newPopulation = new Population();
 
 			// krzyzowanie
-			try {
-				for (int i = 0; i < population.individuals.size(); i++) {
-                    Individual indiv1 = population.tournamentSelection();
-                    Individual indiv2 = population.tournamentSelection();
-                    if (Math.random() <= Constants.CROSSOVER_RATE) {
-                        // szukamy metoda turniejową 2 najlepszych osobnikow
+            for (int i = 0; i < population.individuals.size(); i++) {
+                // szukamy metoda turniejową 2 najlepszych osobnikow
+                Individual indiv1 = population.tournamentSelection();
+                Individual indiv2 = population.tournamentSelection();
+                if (Math.random() <= crossoverProbability) {
 
+                    // pobieramy ich sciezki
+                    ArrayList<Vertex> lst1 = new ArrayList<Vertex>(indiv1.path);
+                    ArrayList<Vertex> lst2 = new ArrayList<Vertex>(indiv2.path);
 
-                        // pobieramy ich sciezki
-                        ArrayList<Vertex> lst1 = new ArrayList<Vertex>(indiv1.path);
-                        ArrayList<Vertex> lst2 = new ArrayList<Vertex>(indiv2.path);
+                    // krzyzowanie 2 podanych sciezek
+                    List<Individual> newIndiv = Individual.crossoverNew(lst1, lst2);
 
-                        // krzyzowanie 2 podanych sciezek
-                        List<Individual> newIndiv = Individual.crossoverNew(lst1, lst2);
-
-                        // dodaj nowa sciezke do nowej populacji
-                        if(newIndiv.get(0).validatePath(newIndiv.get(0).path, graph.getGraph())){
-                            newPopulation.individuals.add(newIndiv.get(0));
-                            System.err.println("cross :))");
-                        }
-                        else {
-                            newPopulation.individuals.add(indiv1);
-                            System.err.println("cross fail :/");
-                        }
-
-                       // newPopulation.individuals.add(newIndiv.get(1));
+                    // dodaj nowa sciezke do nowej populacji
+                    if(newIndiv.get(0).validatePath(newIndiv.get(0).path, ourGraph.getGraph())){
+                        newPopulation.individuals.add(newIndiv.get(0));
+                        crossoverCounter++;
+                     //   System.err.println("cross :))");
                     }
                     else {
+                        // sciezka po krzyzowaniu jest niepoprawna
                         newPopulation.individuals.add(indiv1);
-                        System.err.println("cross skip :/");
                     }
+                }
+                else {
+                    newPopulation.individuals.add(indiv1);
+                }
+            }
 
-
-				}
-
-			} catch (Exception e) {
-				System.err.println("Wrong configuration");
-			}
-
-			if (Constants.ENV == 0) {
-				System.out.println("====== AFTER CROSS BEFORE MUTATION======");
-				System.out.println(newPopulation + "graph: " + graph.getGraph().getVertexCount());
-			}
 
 			// mutowanie
 			for (int i = 0; i < newPopulation.individuals.size(); i++) {
-				if (Math.random() <= Constants.MUTATION_RATE) {
-					newPopulation.individuals.get(i).mutate(graph);
+				if (Math.random() <= mutationProbability) {
+					newPopulation.individuals.get(i).mutate(ourGraph);
+                    mutationCounter++;
 				}
 			}
 
-			if (Constants.ENV == 0) {
-				System.out.println("====== AFTER MUTATION ======");
-				System.out.println(newPopulation);
-			}
-
 			population = newPopulation;
+
 			iterations++;
 		}
 
-
-		// oblicz dlugosc tras
+        running = false;
         evaluatePopulation(population);
 
-        // znajdz najlepsza
-		Individual bestIndividual = population.getBestIndividual();
 
-		// utworz krawedzie
-		graph.createEdges(bestIndividual);
 
-		// wyswietl graf
-		graph.printGraph();
-		
+        AlgorithmGUI.logTextArea.append("========= Najlepszy osobnik ===========\n");
+        AlgorithmGUI.logTextArea.append(""+ population.getBestIndividual() + "\n");
+        AlgorithmGUI.logTextArea.append("Krzyżowań: "+ crossoverCounter + "\n");
+        AlgorithmGUI.logTextArea.append("Mutacji: "+ mutationCounter + "\n");
+        AlgorithmGUI.logTextArea.append("Czas: " + (System.currentTimeMillis() - start) + "ms\n");
 
-		if (Constants.ENV == 0) {
-			System.out.println("========= FINAL POPULATION ===========");
-			System.out.println(population);
-		}
+        return;
 
 	}
 
@@ -119,12 +119,9 @@ public class App {
         }
     }
 
-    private static Population createInitialPopulation(Random random, OurGraph graph) {
-        int randomInitPathNumber = random
-                .nextInt((Constants.MAX_INIT_PATH - Constants.MIN_INIT_PATH) + 1)
-                + Constants.MIN_INIT_PATH;
+    private static Population createInitialPopulation(Random random, OurGraph graph, int populationSize, int initPathLength) {
 
-        return new Population(randomInitPathNumber, graph);
+        return new Population(populationSize,initPathLength, graph);
     }
 
     protected static OurGraph createRandomGraph(Random random) {
@@ -136,4 +133,5 @@ public class App {
         graph.generateRandomGraph();
         return graph;
     }
+
 }

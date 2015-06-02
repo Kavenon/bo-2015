@@ -1,12 +1,8 @@
 package pl.agh.edu.bo.projekt;
 
 
-import static org.junit.Assert.*;
-
 import org.junit.Test;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Random;
 
 public class IndividualCreateTest {
@@ -58,15 +54,15 @@ public class IndividualCreateTest {
         }
         System.out.println(path);*/
 
-        Individual individual = new Individual();
+       /* Individual individual = new Individual();
         individual.create(graph);
         System.out.println("ind"+ individual.toString());
 
         /*individual.mutate(graph);
         System.out.println("ind"+ individual.toString());
-        graph.printGraph();*/
+        graph.printGraph();
 
-        Thread.sleep(99995000);
+        Thread.sleep(99995000);*/
     }
 
 }

@@ -1,55 +1,63 @@
 package pl.agh.edu.bo.projekt;
 
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Paint;
-import java.awt.geom.Point2D;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.swing.JFrame;
-
-import com.ctc.wstx.dtd.ContentSpec;
-import edu.uci.ics.jung.visualization.decorators.ToStringLabeller;
-import org.apache.commons.collections15.Transformer;
-
 import edu.uci.ics.jung.algorithms.layout.Layout;
 import edu.uci.ics.jung.algorithms.layout.StaticLayout;
 import edu.uci.ics.jung.graph.Graph;
 import edu.uci.ics.jung.graph.UndirectedSparseGraph;
 import edu.uci.ics.jung.visualization.BasicVisualizationServer;
+import edu.uci.ics.jung.visualization.decorators.ToStringLabeller;
+import org.apache.commons.collections15.Transformer;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.geom.Point2D;
+import java.util.ArrayList;
+import java.util.List;
 
 public class OurGraph {
 
-	private int n;
-	private UndirectedSparseGraph<Vertex, String> dg;
+	private int verticlesCount;
+    private double edgeProbability;
+    private UndirectedSparseGraph<Vertex, String> dg;
+
+    public OurGraph(int verticlesCount, double edgeProbability) {
+        this.verticlesCount = verticlesCount;
+        this.edgeProbability = edgeProbability;
+    }
+    public OurGraph(int verticlesCount) {
+        this.verticlesCount = verticlesCount;
+        this.edgeProbability = Constants.EDGE_PROBABILITY;
+    }
+
+    public OurGraph( UndirectedSparseGraph<Vertex, String> dg){
+        this.dg = dg;
+    }
+
 
 	public Graph<Vertex, String> getGraph() {
 		return dg;
 	}
 
-	public OurGraph(int n) {
-		this.n = n;
-	}
 
 	public Graph<Vertex, String> generateRandomGraph() {
 
 		dg = new UndirectedSparseGraph<Vertex, String>();
 
-		for (int i = 0; i < n; i++) {
+		for (int i = 0; i < verticlesCount; i++) {
 			dg.addVertex(new Vertex(i));
 		}
 
         List<Vertex> verticles = new ArrayList(dg.getVertices());
-
-        for (int i = 0; i < dg.getVertexCount(); i++) {
-            for (int j = i + 1; j < dg.getVertexCount(); j++) {
-                if (Math.random() < Constants.EDGE_PROBABILITY) {
+        int vertexCount =  dg.getVertexCount();
+        for (int i = 0; i < vertexCount; i++) {
+            for (int j = i + 1; j < vertexCount; j++) {
+                if (Math.random() < edgeProbability) {
                     if(i != j)
                         dg.addEdge(i + "-to-" + j, verticles.get(i), verticles.get(j));
                 }
             }
         }
+
 
 		return dg;
 	}
@@ -95,5 +103,12 @@ public class OurGraph {
 		frame.pack();
 		frame.setVisible(true);
 	}
+
+    public static void printGraph(UndirectedSparseGraph<Vertex, String> dg) {
+
+        OurGraph ourGraph = new OurGraph(dg);
+        ourGraph.printGraph();
+
+    }
 	
 }

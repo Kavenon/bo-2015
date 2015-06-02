@@ -6,19 +6,18 @@ public class Population {
 
 	ArrayList<Individual> individuals;
 
-	Population(int populationSize, OurGraph graph) {
-		individuals = new ArrayList<Individual>();
+    public Population(){
+        individuals = new ArrayList<Individual>();
+    }
+	public Population(int populationSize, int initPathLength, OurGraph graph) {
+        individuals = new ArrayList<Individual>();
 
-		for (int i = 0; i < populationSize; i++) {
-			Individual newIndyvidual = new Individual();
-			newIndyvidual.create(graph);
-			newIndyvidual.debug();
-			individuals.add(newIndyvidual);
-		}
-	}
-
-	public Population() {
-		individuals = new ArrayList<Individual>();
+        for (int i = 0; i < populationSize; i++) {
+            Individual newIndyvidual = new Individual();
+            newIndyvidual.create(graph,initPathLength);
+          //  newIndyvidual.debug();
+            individuals.add(newIndyvidual);
+        }
 	}
 
 	Individual getBestIndividual() {
@@ -26,8 +25,8 @@ public class Population {
 
 		double bestRating = Double.MIN_VALUE;
 		for (Individual i : individuals) {
-			if (i.length >= bestRating) {
-				bestRating = i.length;
+			if (i.path.size() >= bestRating) {
+				bestRating = i.path.size();
 				result = i;
 			}
 		}
@@ -35,24 +34,21 @@ public class Population {
 		return result;
 	}
 
-	Individual tournamentSelection() throws Exception {
+	Individual tournamentSelection()  {
 
-		if (Constants.TOURNAMENT_POPULATION_SIZE > Constants.MIN_INIT_PATH)
-			throw new Exception();
-
-		// populacja turniejowa
 		Population tournament = new Population();
 
 		// dodaj do populacji turniejowej losowe sciezki
-		for (int i = 0; i < Constants.TOURNAMENT_POPULATION_SIZE; i++) {
+        int populationSize = (int) (individuals.size() * Constants.TOURNAMENT_POPULATION_RATE);
+
+		for (int i = 0; i < populationSize; i++) {
 			int randomId = (int) (Math.random() * individuals.size());
 
 			if (!tournament.individuals.contains(individuals.get(randomId)))
 				tournament.individuals.add(individuals.get(randomId));
 		}
 
-		// wybierz najlepsza i zwroc (moze zwrocic takie same za kazdym
-		// wywolaniem)
+
 		Individual fittest = tournament.getBestIndividual();
 		return fittest;
 

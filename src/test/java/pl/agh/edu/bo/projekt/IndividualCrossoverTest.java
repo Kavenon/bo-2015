@@ -1,17 +1,9 @@
 package pl.agh.edu.bo.projekt;
 
 
-import static org.junit.Assert.*;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import javafx.util.Pair;
-import org.junit.Test;
-
 public class IndividualCrossoverTest {
 
-	//Sprawdza czy poprawnie skrzyzowalo
+	/*//Sprawdza czy poprawnie skrzyzowalo
 	@Test
 	public void test() {
 		ArrayList <Vertex> l1 = new ArrayList<Vertex>();
@@ -160,7 +152,7 @@ public class IndividualCrossoverTest {
         System.out.println(l2cross);
         assertTrue(crossedIndividuals.get(0).path.equals(l1cross));
         assertTrue(crossedIndividuals.get(1).path.equals(l2cross));
-    }
+    }*/
 
 }
 

@@ -4,17 +4,17 @@ import java.util.Random;
 
 public class Vertex {
 
-	private int id;
+	public int id;
 
 	private int x;
 	private int y;
-	private boolean visited;
+
 
 	public Vertex(int id) {
 		Random random = new Random();
 		this.id = id;
 		this.x = random.nextInt(Constants.CANVAS_WIDTH);
-		this.y = random.nextInt(Constants.CANVAS_HEIGHT);
+        this.y = random.nextInt(Constants.CANVAS_HEIGHT);
 	}
 
 	public int getId() {
@@ -23,14 +23,6 @@ public class Vertex {
 
 	public void setId(int id) {
 		this.id = id;
-	}
-
-	public boolean isVisited() {
-		return visited;
-	}
-
-	public void setVisited(boolean visited) {
-		this.visited = visited;
 	}
 
 	public int getX() {
@@ -56,7 +48,7 @@ public class Vertex {
 
     @Override
     public String toString() {
-        return "" + id;
+        return String.valueOf(id);
     }
 
     @Override
