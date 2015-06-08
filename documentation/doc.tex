@@ -36,10 +36,12 @@
 \item Selekcja - populacja jest poddawana ocenie (korzystając z funkcji oceny), wybierane są najlepsze osobniki
 \item Krzyżowanie - złączanie uprzednio wybranych osobników
 \item Mutacja - wprowadzenie losowych zmian w osobniku
-\item Rodzi się kolejne pokolenie. Najlepsze osobniki są powielane, a najsłabsze usuwane. Jeżeli nie znaleziono dostatecznie dobrego rozwiązania, algorytm powraca do kroku drugiego. W przeciwnym wypadku wybieramy najlepszego osobnika z populacji.
+\item Rodzi się kolejne pokolenie. Najlepsze osobniki są powielane, a najsłabsze usuwane. Jeżeli nie przekroczono ilości iteracji, algorytm powraca do kroku drugiego. W przeciwnym wypadku wybieramy najlepszego osobnika z populacji.
 \end{enumerate}
 \subsubsection{Funkcja oceny}
 Funkcja oceny to miara jakości dowolnego osobnika w populacji. Dla każdego osobnika jest ona ilością wierzchołków w ścieżce.
+\subsubsection{Selekcja}
+Za pomocą selekcji turniejowej wybieramy 2 osobniki, które poddajemy krzyżowaniu.
 \subsubsection{Krzyżowanie}
 Krzyżowanie zachodzi z pewnym prawdopodobieństwem(określonym przez użytkownika).
 \\
@@ -49,14 +51,17 @@ Pierwsza połowa chromosomów z jednego osobnika jest łączona z drugą połow�
 \caption{Krzyżowanie}
 \end{figure}
 \subsubsection{Mutacja}
-Mutacja zachodzi z pewnym prawdopodobieństwem, które użytkownik może ustawić przed uruchomieniem programu (domyślnie wynosi 0.5). W przeciwieństwie do krzyżowania, zmieniony zostaje jeden osobnik. 
-Polega na dodaniu losowego wierzchołka grafu (z puli jeszcze nie użytych) w losowe miejsce w osobniku. Następnie sprawdzenie, czy został utworzony cykl prosty.
+Mutacja zachodzi z pewnym prawdopodobieństwem, które użytkownik może ustawić przed uruchomieniem programu (domyślnie wynosi 0.5). W wylosowanym miejscu w ścieżce dodajemy losowy wierzchołek przez który jeszcze nie przechodziliśmy. Proces jest powtarzany, aż do osiągnięcia prawidłowej ścieżki, bądź przekroczenia maksymalnej liczby iteracji
 \begin{figure}[htbp]
 \center{\includegraphics[scale=0.40]{mut.png}}
 \caption{Mutacja}
 \end{figure}
 \section{Program}
 \subsection{GUI}
+\begin{figure}[htbp]
+\center{\includegraphics[scale=0.25]{interfejs.png}}
+\caption{Interfejs programu}
+\end{figure}
 \subsubsection{Opis obszarów okna}
 \begin{itemize}
 \item \textbf{pole Wykres}: obrazuje zmianę populacji w zależności od czasu, jest generowany w czasie rzeczywistym
@@ -74,13 +79,22 @@ Polega na dodaniu losowego wierzchołka grafu (z puli jeszcze nie użytych) w lo
 \end{itemize}
 \subsection{Obsługa}
 \subsubsection{Generowanie grafu}
+\begin{figure}[htbp]
+\center{\includegraphics[scale=1]{generuj.png}}
+\caption{Okno generowania grafu}
+\end{figure}
 \begin{enumerate}
 \item Kliknij w przycisk "plik" znajdujący się w lewym górnym rogu programu;
 \item Wybierz "Generuj graf";
 \item W nowo otwartym oknie określ ilość wierzchołków i prawdopodobieństwo krawędzi;
 \item Po kliknięciu "Generuj graf", wybierz ścieżkę do zapisania nowo utworzonego grafu.
 \end{enumerate}
+\newpage
 \subsubsection{Wczytywanie grafu z pliku}
+\begin{figure}[htbp]
+\center{\includegraphics[scale=0.8]{open.png}}
+\caption{Okno wczytywania grafu}
+\end{figure}
 \begin{enumerate}
 \item Kliknij w przycisk "plik" znajdujący się w lewym górnym rogu programu;
 \item Wybierz "Wczytaj graf";
