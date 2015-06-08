@@ -15,7 +15,6 @@ public class Population {
         for (int i = 0; i < populationSize; i++) {
             Individual newIndyvidual = new Individual();
             newIndyvidual.create(graph,initPathLength);
-          //  newIndyvidual.debug();
             individuals.add(newIndyvidual);
         }
 	}
@@ -38,16 +37,12 @@ public class Population {
 
 		Population tournament = new Population();
 
-		// dodaj do populacji turniejowej losowe sciezki
-        int populationSize = (int) (individuals.size() * Constants.TOURNAMENT_POPULATION_RATE);
-
-		for (int i = 0; i < populationSize; i++) {
+		for (int i = 0; i < Constants.TOURNAMENT_POPULATION; i++) {
 			int randomId = (int) (Math.random() * individuals.size());
 
 			if (!tournament.individuals.contains(individuals.get(randomId)))
 				tournament.individuals.add(individuals.get(randomId));
 		}
-
 
 		Individual fittest = tournament.getBestIndividual();
 		return fittest;

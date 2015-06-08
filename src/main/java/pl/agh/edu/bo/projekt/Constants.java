@@ -13,5 +13,6 @@ public class Constants {
 	public static final int CANVAS_WIDTH = 1200;
 	public static final int CANVAS_HEIGHT = 600;
 
-    public static final double TOURNAMENT_POPULATION_RATE = 0.3;
+
+    public static final int TOURNAMENT_POPULATION = 5;
 }

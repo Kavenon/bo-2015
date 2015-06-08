@@ -120,21 +120,19 @@ public class AlgorithmGUI {
         p.setLayout(new FlowLayout());
 
         JButton startButton = new JButton("Start");
-        startButton.addChangeListener(new ChangeListener() {
+        startButton.addActionListener(new ActionListener() {
             @Override
-            public void stateChanged(ChangeEvent e) {
+            public void actionPerformed(ActionEvent e) {
                 // app.run
                 AbstractButton aButton = (AbstractButton) e.getSource();
 
                 ButtonModel aModel = aButton.getModel();
 
-                if (aModel.isPressed() && !algorithm.running) {
+                if (!algorithm.running) {
 
-                    if(MenuCreator.graph == null){
+                    if (MenuCreator.graph == null) {
                         JOptionPane.showMessageDialog(null, "Najpierw otwórz graf z pliku");
-                    }
-
-                    else {
+                    } else {
                         cleanUpAndStartNewThread();
                     }
 

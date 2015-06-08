@@ -47,7 +47,7 @@ public class App implements Runnable {
             evaluatePopulation(population);
             bestIndividual = population.getBestIndividual();
 
-            if(population.getBestIndividual() != null && population.getBestIndividual().path.size() >= ourGraph.getGraph().getVertexCount()+1){
+           if(population.getBestIndividual() != null && population.getBestIndividual().path.size() >= ourGraph.getGraph().getVertexCount()+1){
                 running = false;
                 break;
             }

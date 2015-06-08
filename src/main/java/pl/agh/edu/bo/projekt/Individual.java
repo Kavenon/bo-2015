@@ -25,21 +25,24 @@ public class Individual {
 	}
 
 	public void create(OurGraph ourGraph, int initPathLength) {
-
+        Random random = new Random();
 		Graph<Vertex, String> graph = ourGraph.getGraph();
 
         ArrayList<Vertex> verticlesFromGraph;
         boolean foundPath = false;
 
         int iterationsToFindOnePath = 0;
+        int plen;
 
         while(!foundPath) {
             verticlesFromGraph = new ArrayList<Vertex>(graph.getVertices());
             path.clear();
 
-            if (initPathLength > 1) {
+            plen = random
+                    .nextInt((initPathLength - 2) + 1) + 2;
+            if (plen > 1) {
 
-                addRandomVerticesToPath(verticlesFromGraph, initPathLength);
+                addRandomVerticesToPath(verticlesFromGraph, plen);
                 addStartVertexToEnd();
 
                 if (validatePath(path, graph)) {
